@@ -18,6 +18,7 @@ public class StatusPostgres implements StatusDAO {
 	public int create(Status dataToAdd) {
 		int generatedId = 0;
 		
+		PreparedStatement pStmt = null;
 		try (Connection conn = connUtil.getConnection()) {
 			// when you run DML statements, you want to manage the TCL
 			conn.setAutoCommit(false);
@@ -25,7 +26,7 @@ public class StatusPostgres implements StatusDAO {
 			String sql = "insert into status (id,name) "
 					+ "values (default, ?)";
 			String[] keys = {"id"};
-			PreparedStatement pStmt = conn.prepareStatement(sql, keys);
+			pStmt = conn.prepareStatement(sql, keys);
 			pStmt.setString(1, dataToAdd.getName());
 			
 			pStmt.executeUpdate();
@@ -40,6 +41,12 @@ public class StatusPostgres implements StatusDAO {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				pStmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		
@@ -49,9 +56,11 @@ public class StatusPostgres implements StatusDAO {
 	@Override
 	public Status getById(int id) {
 		Status status = null;
+		
+		PreparedStatement pStmt = null;
 		try (Connection conn = connUtil.getConnection()) {
 			String sql = "select * from status where id=?";
-			PreparedStatement pStmt = conn.prepareStatement(sql);
+			pStmt = conn.prepareStatement(sql);
 			pStmt.setInt(1, id);
 			
 			ResultSet resultSet = pStmt.executeQuery();
@@ -64,6 +73,12 @@ public class StatusPostgres implements StatusDAO {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				pStmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return status;
@@ -72,9 +87,11 @@ public class StatusPostgres implements StatusDAO {
 	@Override
 	public Set<Status> getAll() {
 		Set<Status> statuses = new HashSet<>();
+		
+		PreparedStatement pStmt = null;
 		try (Connection conn = connUtil.getConnection()) {
 			String sql = "select * from status";
-			PreparedStatement pStmt = conn.prepareStatement(sql);
+			pStmt = conn.prepareStatement(sql);
 			
 			ResultSet resultSet = pStmt.executeQuery();
 			
@@ -87,6 +104,12 @@ public class StatusPostgres implements StatusDAO {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				pStmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return statuses;
@@ -94,13 +117,15 @@ public class StatusPostgres implements StatusDAO {
 
 	@Override
 	public void update(Status dataToUpdate) {
+		PreparedStatement pStmt = null;
+		
 		try (Connection conn = connUtil.getConnection()) {
 			conn.setAutoCommit(false);
 			
 			String sql = "update status set "
 					+ "name=? "
 					+ "where id=?";
-			PreparedStatement pStmt = conn.prepareStatement(sql);
+			pStmt = conn.prepareStatement(sql);
 			pStmt.setString(1, dataToUpdate.getName());
 			
 			int rowsAffected = pStmt.executeUpdate();
@@ -113,17 +138,24 @@ public class StatusPostgres implements StatusDAO {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				pStmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	@Override
 	public void delete(Status dataToDelete) {
+		PreparedStatement pStmt = null;
 		try (Connection conn = connUtil.getConnection()) {
 			conn.setAutoCommit(false);
 
 			String sql = "delete from status "
 					+ "where id=?";
-			PreparedStatement pStmt = conn.prepareStatement(sql);
+			pStmt = conn.prepareStatement(sql);
 			pStmt.setInt(1, dataToDelete.getId());
 
 			int rowsAffected = pStmt.executeUpdate();
@@ -136,15 +168,23 @@ public class StatusPostgres implements StatusDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				pStmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	@Override
 	public Status getByName(String name) {
 		Status status = null;
+		
+		PreparedStatement pStmt = null;
 		try (Connection conn = connUtil.getConnection()) {
 			String sql = "select * from status where name=?";
-			PreparedStatement pStmt = conn.prepareStatement(sql);
+			pStmt = conn.prepareStatement(sql);
 			pStmt.setString(1, name);
 			
 			ResultSet resultSet = pStmt.executeQuery();
@@ -157,6 +197,12 @@ public class StatusPostgres implements StatusDAO {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				pStmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return status;

@@ -20,13 +20,14 @@ public class PetPostgres implements PetDAO {
 	public int create(Pet dataToAdd) {
 		int generatedId = 0;
 		
+		PreparedStatement pStmt = null;
 		try (Connection conn = connUtil.getConnection()) {
 			conn.setAutoCommit(false);
 			
 			String sql = "insert into pet (id,name,species,description,age,status_id) "
 					+ "values (default, ?, ?, ?, ?, ?)";
 			String[] keys = {"id"};
-			PreparedStatement pStmt = conn.prepareStatement(sql, keys);
+			pStmt = conn.prepareStatement(sql, keys);
 			pStmt.setString(1, dataToAdd.getName());
 			pStmt.setString(2, dataToAdd.getSpecies());
 			pStmt.setString(3, dataToAdd.getDescription());
@@ -45,6 +46,12 @@ public class PetPostgres implements PetDAO {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				pStmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		
@@ -55,6 +62,7 @@ public class PetPostgres implements PetDAO {
 	public Pet getById(int id) {
 		Pet pet = null;
 		
+		PreparedStatement pStmt = null;
 		try (Connection conn = connUtil.getConnection()) {
 			String sql = "select pet.id,"
 					+ " pet.name,"
@@ -66,7 +74,7 @@ public class PetPostgres implements PetDAO {
 					" from pet" + 
 					" join status on pet.status_id=status.id" + 
 					" where pet.id=?";
-			PreparedStatement pStmt = conn.prepareStatement(sql);
+			pStmt = conn.prepareStatement(sql);
 			pStmt.setInt(1, id);
 			
 			ResultSet resultSet = pStmt.executeQuery();
@@ -88,6 +96,12 @@ public class PetPostgres implements PetDAO {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				pStmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return pet;
@@ -97,6 +111,7 @@ public class PetPostgres implements PetDAO {
 	public Set<Pet> getAll() {
 		Set<Pet> allPets = new HashSet<>();
 		
+		Statement stmt = null;
 		try (Connection conn = connUtil.getConnection()) {
 			String sql = "select pet.id,"
 					+ " pet.name,"
@@ -107,7 +122,7 @@ public class PetPostgres implements PetDAO {
 					+ " status.name as status_name" + 
 					" from pet" + 
 					" join status on pet.status_id=status.id";
-			Statement stmt = conn.createStatement();
+			stmt = conn.createStatement();
 			ResultSet resultSet = stmt.executeQuery(sql);
 			
 			// while the result set has another row
@@ -129,10 +144,14 @@ public class PetPostgres implements PetDAO {
 				
 				allPets.add(pet);
 			}
-			
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return allPets;
@@ -140,13 +159,15 @@ public class PetPostgres implements PetDAO {
 
 	@Override
 	public void update(Pet dataToUpdate) {
+		PreparedStatement pStmt = null;
+		
 		try (Connection conn = connUtil.getConnection()) {
 			conn.setAutoCommit(false);
 			
 			String sql = "update pet set "
 					+ "name=?,species=?,description=?,age=?,status_id=? "
 					+ "where id=?";
-			PreparedStatement pStmt = conn.prepareStatement(sql);
+			pStmt = conn.prepareStatement(sql);
 			pStmt.setString(1, dataToUpdate.getName());
 			pStmt.setString(2, dataToUpdate.getSpecies());
 			pStmt.setString(3, dataToUpdate.getDescription());
@@ -164,17 +185,25 @@ public class PetPostgres implements PetDAO {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				pStmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	@Override
 	public void delete(Pet dataToDelete) {
+		PreparedStatement pStmt = null;
+		
 		try (Connection conn = connUtil.getConnection()) {
 			conn.setAutoCommit(false);
 
 			String sql = "delete from pet "
 					+ "where id=?";
-			PreparedStatement pStmt = conn.prepareStatement(sql);
+			pStmt = conn.prepareStatement(sql);
 			pStmt.setInt(1, dataToDelete.getId());
 
 			int rowsAffected = pStmt.executeUpdate();
@@ -196,6 +225,12 @@ public class PetPostgres implements PetDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				pStmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -203,6 +238,7 @@ public class PetPostgres implements PetDAO {
 	public Set<Pet> getByStatus(String status) {
 		Set<Pet> allPets = new HashSet<>();
 
+		PreparedStatement pStmt = null;
 		try (Connection conn = connUtil.getConnection()) {
 			String sql = "select pet.id,"
 					+ " pet.name,"
@@ -214,7 +250,7 @@ public class PetPostgres implements PetDAO {
 					" from pet" + 
 					" join status on pet.status_id=status.id" + 
 					" where status.name=?";
-			PreparedStatement pStmt = conn.prepareStatement(sql);
+			pStmt = conn.prepareStatement(sql);
 			pStmt.setString(1, status);
 	
 			ResultSet resultSet = pStmt.executeQuery();
@@ -241,6 +277,12 @@ public class PetPostgres implements PetDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				pStmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 
 		return allPets;
