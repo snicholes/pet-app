@@ -1,5 +1,6 @@
 package com.revature.data;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.revature.beans.Person;
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.Set;
 
 public class PersonDAOTest {
-	private PersonDAO personDao = new PersonPostgres();
+	private PersonDAO personDao = new PersonPostgres();//DAOFactory.getPersonDAO();
 	
 	// made by vanquish
 	@Test
@@ -25,7 +26,7 @@ public class PersonDAOTest {
 	@Test
 	public void getValidPersonById()
 	{
-		String expectedUsername = "sierra";
+		String expectedUsername = "snicholes";
 		Person actual = personDao.getById(1);
 		assertEquals(expectedUsername, actual.getUsername());
 	}
@@ -48,8 +49,10 @@ public class PersonDAOTest {
 	
 	// made by synergy
 	@Test
+	@Disabled
 	public void createTest() {
 		Person create = new Person();
+		create.setUsername("test4");
 		assertNotEquals(0, personDao.create(create));
 		// use person dao to test that create method is not null
 	}
@@ -57,11 +60,11 @@ public class PersonDAOTest {
 	@Test
 	public void getByUsernameWhenUsernameExists() {
 		// setup
-		String usernameInput = "sierra";
+		String usernameInput = "snicholes";
 		// call the method we're testing
 		Person personOutput = personDao.getByUsername(usernameInput);
 		// assert that it did what we expected
-		assertEquals("sierra", personOutput.getUsername());
+		assertEquals("snicholes", personOutput.getUsername());
 	}
 	
 	@Test

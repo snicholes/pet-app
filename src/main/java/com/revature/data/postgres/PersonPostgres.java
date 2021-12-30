@@ -67,9 +67,10 @@ public class PersonPostgres implements PersonDAO {
 		Person person = null;
 		
 		try (Connection conn = connUtil.getConnection()) {
-			String sql = "select id,full_name,username,passwd,"
+			String sql = "select person.id,full_name,username,passwd,"
 					+ " role_id,user_role.name as role_name"
-					+ " from person join user_role where id=?";
+					+ " from person join user_role"
+					+ " on person.role_id=user_role.id where person.id=?";
 			PreparedStatement pStmt = conn.prepareStatement(sql);
 			pStmt.setInt(1, id);
 			
@@ -102,9 +103,9 @@ public class PersonPostgres implements PersonDAO {
 		Set<Person> allPeople = new HashSet<>();
 		
 		try (Connection conn = connUtil.getConnection()) {
-			String sql = "select id,full_name,username,passwd,"
+			String sql = "select person.id,full_name,username,passwd,"
 					+ " role_id,user_role.name as role_name"
-					+ " from person join user_role";
+					+ " from person join user_role on person.role_id=user_role.id";
 			Statement stmt = conn.createStatement();
 			ResultSet resultSet = stmt.executeQuery(sql);
 			
@@ -153,7 +154,9 @@ public class PersonPostgres implements PersonDAO {
 			
 			int rowsAffected = pStmt.executeUpdate();
 			
-			boolean petsUpdated = addNewOwnedPets(conn, dataToUpdate);
+			boolean petsUpdated = true;
+			if (dataToUpdate.getPets().size() > 0)
+				petsUpdated = addNewOwnedPets(conn, dataToUpdate);
 			
 			if (rowsAffected<=1 && petsUpdated) {
 				conn.commit();
@@ -203,9 +206,10 @@ public class PersonPostgres implements PersonDAO {
 		Person person = null;
 		
 		try (Connection conn = connUtil.getConnection()) {
-			String sql = "select id,full_name,username,passwd,"
+			String sql = "select person.id,full_name,username,passwd,"
 					+ " role_id,user_role.name as role_name"
-					+ " from person join user_role where username=?";
+					+ " from person join user_role"
+					+ " on person.role_id=user_role.id where username=?";
 			PreparedStatement pStmt = conn.prepareStatement(sql);
 			pStmt.setString(1, username);
 			
@@ -279,6 +283,7 @@ public class PersonPostgres implements PersonDAO {
 			if (i!=person.getPets().size()-1) sql+= ",";
 		}
 		
+		System.out.println(sql);
 		PreparedStatement pStmt = conn.prepareStatement(sql);
 		
 		int parameterIndex = 1;

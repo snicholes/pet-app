@@ -24,10 +24,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Person register(Person newUser) throws UsernameAlreadyExistsException {
 		int newId = personDao.create(newUser);
-		if (newId != 0) {
+		if (newId > 0) {
 			newUser.setId(newId);
 			return newUser;
-		} if (newId == -1) {
+		} else if (newId == -1) {
 			throw new UsernameAlreadyExistsException();
 		}
 		return null;

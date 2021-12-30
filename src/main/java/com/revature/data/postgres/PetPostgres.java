@@ -65,7 +65,7 @@ public class PetPostgres implements PetDAO {
 					+ " status.name as status_name" + 
 					" from pet" + 
 					" join status on pet.status_id=status.id" + 
-					" where id=?";
+					" where pet.id=?";
 			PreparedStatement pStmt = conn.prepareStatement(sql);
 			pStmt.setInt(1, id);
 			

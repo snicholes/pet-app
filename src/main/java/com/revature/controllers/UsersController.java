@@ -37,7 +37,7 @@ public class UsersController {
 		try {
 			Person person = userServ.logIn(username, password);
 			String token = Integer.toString(person.hashCode());
-			ctx.json(token);
+			ctx.result(token);
 		} catch (IncorrectCredentialsException e) {
 			ctx.status(404);
 			ctx.result(e.getMessage());
