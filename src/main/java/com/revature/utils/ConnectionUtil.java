@@ -43,9 +43,9 @@ public class ConnectionUtil {
 		try {
 			Class.forName(databaseProps.getProperty("drv"));
 			conn = DriverManager.getConnection(
-					databaseProps.getProperty("url"),
-					databaseProps.getProperty("usr"),
-					databaseProps.getProperty("psw"));
+					databaseProps.getProperty("aws"),
+					System.getenv("DB_USER"),
+					System.getenv("DB_PASS"));
 		} catch (SQLException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
