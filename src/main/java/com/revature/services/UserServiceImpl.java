@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Person adoptPet(int petId, Person newOwner) throws AlreadyAdoptedException {
 		Pet petToAdopt = petDao.getById(petId);
-		if (petToAdopt.getStatus().getName().equals("Available")) {
+		if (petToAdopt!=null && petToAdopt.getStatus().getName().equals("Available")) {
 			Status adoptedStatus = statusDao.getByName("Adopted");
 			petToAdopt.setStatus(adoptedStatus);
 			newOwner.getPets().add(petToAdopt);
