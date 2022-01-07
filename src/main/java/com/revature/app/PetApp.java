@@ -20,8 +20,13 @@ public class PetApp {
 		// this makes sure that anything beyond a basic "get all pets"
 		// requires a login token
 		app.before("/pets/*", ctx -> {
-			String token = ctx.header("Token");
-			if (token==null) ctx.status(HttpCode.UNAUTHORIZED);
+			if (!ctx.method().equals("OPTIONS")) {
+				ctx.header("Access-Control-Allow-Headers", "Token");
+			    ctx.header("Access-Control-Expose-Headers", "Token");
+				
+				String token = ctx.header("Token");
+				if (token==null) ctx.status(HttpCode.UNAUTHORIZED);
+			}
 		});
 		
 		app.routes(() -> {

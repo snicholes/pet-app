@@ -36,7 +36,7 @@ public class UsersController {
 		
 		try {
 			Person person = userServ.logIn(username, password);
-			String token = Integer.toString(person.hashCode());
+			String token = Integer.toString(person.getId());
 			ctx.result(token);
 		} catch (IncorrectCredentialsException e) {
 			ctx.status(404);
@@ -49,7 +49,7 @@ public class UsersController {
 		try {
 			int id = Integer.parseInt(ctx.pathParam("id"));
 			Person loggedInPerson = userServ.getUserById(id);
-			if (loggedInPerson!=null && loggedInPerson.hashCode()==Integer.parseInt(token)) {
+			if (loggedInPerson!=null) {
 				ctx.json(loggedInPerson);
 			} else {
 				ctx.status(HttpCode.UNAUTHORIZED);
