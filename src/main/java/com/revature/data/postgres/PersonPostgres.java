@@ -256,6 +256,13 @@ public class PersonPostgres implements PersonDAO {
 
 	private boolean addNewOwnedPets(Connection conn, Person person) throws SQLException {
 		for (Pet pet : person.getPets()) {
+			String query = "select * from pet_owner where pet_id=?";
+			try (PreparedStatement pStmt = conn.prepareStatement(query)) {
+				pStmt.setInt(1, pet.getId());
+				ResultSet resultSet = pStmt.executeQuery();
+				if (resultSet.next()) continue;
+			}
+			
 			String sql = "insert into pet_owner (pet_id,owner_id) values (?,?)";
 
 			try (PreparedStatement pStmt = conn.prepareStatement(sql)) {
