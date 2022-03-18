@@ -1,0 +1,84 @@
+body {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background-color: #eebb66;
+}
+
+nav a {
+    color:#ff7a1c;
+}
+
+nav {
+    display:flex;
+    justify-content: space-around;
+    font-size:24pt;
+}
+
+#navLeft {
+    display: flex;
+    justify-content: space-around;
+    width:67%;
+}
+
+#navRight {
+    display: flex;
+    justify-content: right;
+    width:33%;
+}
+
+nav, main {
+    margin:.5em;
+    padding: 1em;
+    background-color:#ffffcc;
+}
+
+main {
+    font-size:16pt;
+}
+
+table,th,td {
+    font-size:16pt;
+    border:1px solid #887744;
+    border-collapse: collapse;
+}
+
+th,td {
+    padding:.5em;
+}
+
+th {
+    border-width: 1px 1px 5px 1px;
+}
+
+tr:nth-child(1) {
+    background-color: #d4c89b;
+}
+
+tr:nth-child(even) {
+    background-color: #eee8bb;
+}
+
+button {
+    padding:.5em;
+    background-color: #ff7a1c;
+    color:white;
+    border-style: none;
+    border-radius: .75em;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 16pt;
+}
+
+button:hover {
+    color:#ffffcc;
+    background-color: #dd580a;
+    box-shadow: 0px 3px #eebb66;
+}
+
+#adopt3 {
+    background-color:blue;
+}
+
+.loginForm {
+    margin:.5em;
+    padding: 1em;
+    background-color:#ffffcc;
+}
